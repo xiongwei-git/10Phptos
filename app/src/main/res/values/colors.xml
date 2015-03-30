@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- item image -->
+    <color name="image_without_palette">#1C1D23</color>
+    <color name="text_without_palette">#ffeae1da</color>
+
+    <!-- default theme colors -->
+    <color name="primary">#3F51B5</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="primary_light">#C5CAE9</color>
+    <color name="background">#ECECEC</color>
+    <color name="accent">#03A9F4</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+
+    <!-- overwrite the materialDrawer selected text color -->
+    <color name="material_drawer_dark_selected_text">@color/accent</color>
+
+    <!-- green fab button -->
+    <color name="primary_green">#B2FF59</color>
+    <color name="primary_dark_green">#259B24</color>
+    <color name="accent_green">#8BC34A</color>
+    <color name="unfinished_progress">#AAFFFFFF</color>
+
+    <!-- transparent -->
+    <color name="transparent">#00FFFFFF</color>
+    <color name="material_red">#E51C23</color>
+
+    <!-- error view -->
+    <color name="error_view_text">#ffffffff</color>
+    <color name="error_view_text_light">#ffffffff</color>
+    <color name="error_view_text_dark">#DEDEDE</color>
+
+    <!-- AboutLibraries DARK colors -->
+    <color name="theme_window_background">#303030</color>
+    <color name="about_libraries_card">#666666</color>
+    <color name="about_libraries_title_openSource">#ffffffff</color>
+    <color name="about_libraries_text_openSource">#DEDEDE</color>
+    <color name="about_libraries_dividerDark_openSource">#303030</color>
+    <color name="about_libraries_dividerLight_openSource">#303030</color>
+</resources>

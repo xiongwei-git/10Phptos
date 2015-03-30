@@ -1,0 +1,76 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.ted.wallpaper.app"
+        minSdkVersion 16
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0.0"
+    }
+    
+    buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-DEBUG"
+
+            minifyEnabled false
+        }
+        release {
+
+            zipAlignEnabled true
+            minifyEnabled true
+
+//            proguardFile 'proguard-gson.pro'
+//            proguardFile 'proguard-square-picasso.pro'
+//            proguardFile 'proguard-square-retrofit.pro'
+//            proguardFile 'proguard-project.pro'
+//            proguardFile getDefaultProguardFile('proguard-android.txt')
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def outputFile = output.outputFile
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    def fileName = outputFile.name.replace(".apk", "-v" + defaultConfig.versionName + "-c" + defaultConfig.versionCode + ".apk")
+                    output.outputFile = new File(outputFile.parent, fileName)
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile 'com.koushikdutta.ion:ion:2.0.5'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:palette-v7:21.0.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:cardview-v7:21.0.3'
+    compile 'com.android.support:recyclerview-v7:21.0.3'
+
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
+    compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'io.reactivex:rxandroid:0.24.0'
+
+    compile 'com.nispok:snackbar:2.10.1'
+    compile 'com.gu:option:1.3'
+
+    compile 'com.github.lzyzsd:circleprogress:1.0.1@aar'
+    compile 'com.github.xiprox.errorview:library:1.0.0'
+
+    compile 'com.google.android.apps.muzei:muzei-api:+'
+
+    compile 'com.mikepenz.iconics:library:0.7.5@aar'
+    compile('com.mikepenz.aboutlibraries:library:4.5.8@aar') {
+        transitive = true
+    }
+    compile('com.mikepenz.materialdrawer:library:2.0.0@aar') {
+        transitive = true
+    }
+}

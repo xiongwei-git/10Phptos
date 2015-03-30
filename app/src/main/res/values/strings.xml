@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">10Photos</string>
+    <string name="action_open_source">关于我</string>
+    <string name="action_shuffle">随机</string>
+
+    <!-- categories -->
+    <string name="category_all">全部</string>
+    <string name="category_featured">特色</string>
+    <string name="category_section_categories">分类</string>
+    <string name="category_buildings">建筑</string>
+    <string name="category_food">食物 &amp; 饮料</string>
+    <string name="category_nature">自然</string>
+    <string name="category_objects">物体</string>
+    <string name="category_people">人物</string>
+    <string name="category_technology">科技</string>
+
+    <!-- Images fragments -->
+    <string name="loading_images">Loading images\nPlease wait&#8230;</string>
+
+    <!-- Dialog -->
+    <string name="dialog_setting_title">下载中</string>
+    <string name="dialog_setting_text">Please wait while the high-res version of your wallpaper is downloading. It will be ready shortly&#8230;</string>
+
+    <!-- Try longclicking the buttons -->
+    <string name="help_try_long_click">加载完成后，长按即可更多选择</string>
+    <string name="help_try_long_click_ok">知道了</string>
+
+    <!-- Muzei support -->
+    <string name="muzei_description">awesome unsplash images</string>
+
+    <!-- network exceptions -->
+    <string name="error_network">No connection</string>
+    <string name="error_network_subtitle">It seems you have no network connection.</string>
+    <string name="error_server">Server Exception</string>
+    <string name="error_server_subtitle">The server returned an exception.</string>
+    <string name="error_uncommon">WTF?!</string>
+    <string name="error_uncommon_subtitle">There was an exception which should not happen!</string>
+    <!-- storage exceptions -->
+    <string name="error_no_storage">External Storage not available</string>
+
+    <!-- about this app -->
+    <string name="aboutLibraries_description_showIcon">true</string>
+    <string name="aboutLibraries_description_showVersion">true</string>
+    <string name="aboutLibraries_description_text">
+        <![CDATA[
+        <b>10Photos</b> by <a href="mrxiong.com">Ted Xiong</a>
+        <br/>
+        个人开发的图片下载应用，图片资源主要来自于
+        <a href="https://unsplash.com">unsplash</a>
+        <br/>
+        (这是一个国外免费的高清图片分享网站，由<a href="https://pickcrew.com/">Crew</a>提供服务支持)
+        <br/>
+        <br/>
+        本APP主要创意来自于GitHub上一个极其优秀的开源库
+        <a href="https://github.com/saulmm/OpenLibra-Material">OpenLibra-Material</a>
+        原作者是
+        <a href="https://plus.google.com/u/0/+SaulMolineroMalvido/posts">Saul MM</a>
+        <br/>
+        <br/>
+        其余部分功能以及后台数据支持由本人 <a href="mrxiong.com">Ted Xiong</a>开发
+        <br/>
+        <br/>
+        以下是项目中用到的开源库，感谢原作者，向开源致敬。
+        <br/>
+        <br/>
+        ]]>
+    </string>
+
+    <!-- DialogFragment -->
+    <string name="cancel_label">Cancel</string>
+    <string name="confirm_label">Confirm</string>
+    <string name="selected_folder_label">Selected folder:</string>
+    <string name="create_folder_label">Create folder</string>
+    <string name="create_folder_msg">Create new folder with name "%1$s"?</string>
+    <string name="create_folder_success">Created new folder</string>
+    <string name="create_folder_error_no_write_access">Cannot write to this folder</string>
+    <string name="create_folder_error_already_exists">Folder already exists</string>
+    <string name="create_folder_error">Could not create folder</string>
+    <string name="up_label">Up</string>
+</resources>
