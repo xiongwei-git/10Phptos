@@ -46,6 +46,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.gu.option.Option;
 import com.gu.option.UnitFunction;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -242,6 +243,7 @@ public class DirectoryChooserFragment extends DialogFragment {
         return view;
     }
 
+
     private void adjustResourceLightness() {
         // change up button to light version if using dark theme
         int color = 0xFFFFFF;
@@ -289,6 +291,7 @@ public class DirectoryChooserFragment extends DialogFragment {
     @Override
     public void onPause() {
         super.onPause();
+        AVAnalytics.onFragmentEnd(DirectoryChooserFragment.class.getCanonicalName());
         if (mFileObserver != null) {
             mFileObserver.stopWatching();
         }
@@ -297,6 +300,7 @@ public class DirectoryChooserFragment extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentStart(DirectoryChooserFragment.class.getCanonicalName());
         if (mFileObserver != null) {
             mFileObserver.startWatching();
         }

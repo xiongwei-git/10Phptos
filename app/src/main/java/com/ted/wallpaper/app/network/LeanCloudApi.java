@@ -7,13 +7,15 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.ted.wallpaper.app.CustomApplication;
 import com.ted.wallpaper.app.models.Image;
-import com.ted.wallpaper.app.models.ImageResults;
+import com.ted.wallpaper.app.models.leancloud.ImageListInfoResults;
+import com.ted.wallpaper.app.models.leancloud.ImageResults;
 import com.ted.wallpaper.app.other.Constants;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
+import retrofit.http.Query;
 import rx.Observable;
 
 import java.io.File;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class LeanCloudApi {
+    /**每次加载条目*/
+    public static final int LOAD_LIMIT = 1000;
 
     public static final String ENDPOINT = Constants.LEAN_SERVER_IP + Constants.LEAN_SERVER_IP_VERSION;
 
@@ -60,17 +64,37 @@ public class LeanCloudApi {
     };
 
     public interface LeanCloudService {
-        @GET("/pictures")
+        @GET("/PictureInfo")
+        Observable<ImageListInfoResults> getImagesInfo();
+
+        @GET("/NewPictures")
+        Observable<ImageResults> getNewImages();
+
+        @GET("/AllPictures")
         Observable<ImageResults> listImages();
+
+        /**按照更新时间由新到旧排序获取数据*/
+        @GET("/AllPictures?order=updatedAt")
+        Observable<ImageResults> getMoreImages(
+                @Query("skip") int skip,
+                @Query("limit") int limit
+        );
     }
 
-    public interface RandomUnsplashService {
-        @GET("/random")
-        Image random();
+    public Observable<ImageListInfoResults> getImagesInfo() {
+        return mWebService.getImagesInfo();
+    }
+
+    public Observable<ImageResults> getNewImages() {
+        return mWebService.getNewImages();
     }
 
     public Observable<ImageResults> fetchImages() {
         return mWebService.listImages();
+    }
+
+    public Observable<ImageResults> getMoreImages(int skip,int limit) {
+        return mWebService.getMoreImages(skip,limit);
     }
 
 
@@ -101,9 +125,20 @@ public class LeanCloudApi {
     }
 
     public ArrayList<Image> filterCategory(ArrayList<Image> images, int filter) {
-        ArrayList<Image> list = new ArrayList<Image>(images);
+        ArrayList<Image> list = new ArrayList<>(images);
         for (Iterator<Image> it = list.iterator(); it.hasNext(); ) {
             if ((it.next().getCategory() & filter) != filter) {
+                it.remove();
+            }
+        }
+        return list;
+    }
+
+    public ArrayList<Image> filterOtherCategory(ArrayList<Image> images) {
+        ArrayList<Image> list = new ArrayList<>(images);
+        for (Iterator<Image> it = list.iterator(); it.hasNext(); ) {
+            int category = it.next().getCategory();
+            if (category == 1 || category == 2 || category == 4 || category == 8 || category == 16 || category == 32) {
                 it.remove();
             }
         }

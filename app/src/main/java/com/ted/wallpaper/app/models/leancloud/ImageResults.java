@@ -1,4 +1,6 @@
-package com.ted.wallpaper.app.models;
+package com.ted.wallpaper.app.models.leancloud;
+
+import com.ted.wallpaper.app.models.Image;
 
 import java.util.ArrayList;
 

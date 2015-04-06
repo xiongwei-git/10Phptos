@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
@@ -18,6 +19,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
@@ -210,5 +214,28 @@ public class Utils {
             return true;
         }
         return false;
+    }
+
+    /***
+     * 获取默认格式的日期字符串
+     * @param date
+     * @return
+     */
+    public static String getFormatDateStr(final Date date){
+        if(null == date)return null;
+        return DateFormat.getDateInstance(DateFormat.DEFAULT).format(date);
+    }
+
+    public static Date FormatDateFromStr(final String dateStr){
+        Date date = new Date();
+        if(!TextUtils.isEmpty(dateStr)){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
+            try {
+                date = sdf.parse(dateStr);
+            }catch (Exception e){
+                System.out.print("Error,format Date error");
+            }
+        }
+        return date;
     }
 }

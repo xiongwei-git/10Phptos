@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">10Photos</string>
+    <string name="app_name">十张图</string>
     <string name="action_open_source">关于我</string>
     <string name="action_shuffle">随机</string>
 
     <!-- categories -->
+    <string name="category_new_10">最新十张</string>
     <string name="category_all">全部</string>
-    <string name="category_featured">特色</string>
+    <string name="category_loved">喜欢</string>
     <string name="category_section_categories">分类</string>
     <string name="category_buildings">建筑</string>
     <string name="category_food">食物 &amp; 饮料</string>
@@ -15,6 +16,12 @@
     <string name="category_objects">物体</string>
     <string name="category_people">人物</string>
     <string name="category_technology">科技</string>
+    <string name="category_other">其他</string>
+
+    <!-- categories about-->
+    <string name="update_time_default">暂未更新</string>
+    <string name="update_time_auto">%1$s更新</string>
+
 
     <!-- Images fragments -->
     <string name="loading_images">Loading images\nPlease wait&#8230;</string>
@@ -45,7 +52,7 @@
     <string name="aboutLibraries_description_showVersion">true</string>
     <string name="aboutLibraries_description_text">
         <![CDATA[
-        <b>10Photos</b> by <a href="mrxiong.com">Ted Xiong</a>
+        <b>10Photos</b> by <a href="http://mrxiong.com">Ted Xiong</a>
         <br/>
         个人开发的图片下载应用，图片资源主要来自于
         <a href="https://unsplash.com">unsplash</a>
@@ -59,7 +66,7 @@
         <a href="https://plus.google.com/u/0/+SaulMolineroMalvido/posts">Saul MM</a>
         <br/>
         <br/>
-        其余部分功能以及后台数据支持由本人 <a href="mrxiong.com">Ted Xiong</a>开发
+        其余部分功能以及后台数据支持由本人 <a href="http://mrxiong.com">Ted Xiong</a>开发
         <br/>
         <br/>
         以下是项目中用到的开源库，感谢原作者，向开源致敬。

@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -223,6 +224,19 @@ public class DetailActivity extends ActionBarActivity {
                     .show(this);
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
 
     private View.OnClickListener onFabShareButtonListener = new View.OnClickListener() {
         @Override

@@ -12,19 +12,39 @@ android {
         versionCode 1
         versionName "1.0.0"
     }
-    
+
+    packagingOptions {
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+        }
+
+        release {
+            storeFile file("ted_android.jks")
+            storePassword "xiongwei"
+            keyAlias "ted_android"
+            keyPassword "xiongwei"
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
-
             minifyEnabled false
         }
         release {
-
+            signingConfig signingConfigs.release
             zipAlignEnabled true
-            minifyEnabled true
-
+            minifyEnabled false
 //            proguardFile 'proguard-gson.pro'
 //            proguardFile 'proguard-square-picasso.pro'
 //            proguardFile 'proguard-square-retrofit.pro'
@@ -45,6 +65,7 @@ android {
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.koushikdutta.ion:ion:2.0.5'
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:palette-v7:21.0.3'

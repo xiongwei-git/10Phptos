@@ -15,6 +15,7 @@ public class Image implements Serializable {
     private String color;
     private String image_src;
     private String author;
+    private String updatedAt;
     private Date date;
     private Date modified_date;
     private float ratio;
@@ -167,5 +168,13 @@ public class Image implements Serializable {
 
     public void setCategory(int category) {
         this.category = category;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

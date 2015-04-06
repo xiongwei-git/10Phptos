@@ -14,14 +14,18 @@ import android.util.SparseArray;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import com.avos.avoscloud.AVAnalytics;
 import com.ted.wallpaper.app.R;
 import com.ted.wallpaper.app.activities.DetailActivity;
 import com.ted.wallpaper.app.activities.MainActivity;
 import com.ted.wallpaper.app.adapters.ImageAdapter;
 import com.ted.wallpaper.app.models.Image;
-import com.ted.wallpaper.app.models.ImageResults;
+import com.ted.wallpaper.app.models.leancloud.ImageListInfo;
+import com.ted.wallpaper.app.models.leancloud.ImageListInfoResults;
+import com.ted.wallpaper.app.models.leancloud.ImageResults;
 import com.ted.wallpaper.app.network.LeanCloudApi;
 import com.ted.wallpaper.app.other.OnItemClickListener;
+import com.ted.wallpaper.app.utils.Utils;
 import retrofit.RetrofitError;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -39,35 +43,36 @@ public class ImagesFragment extends Fragment {
     private LeanCloudApi mApi = new LeanCloudApi();
 
     private ImageAdapter mImageAdapter;
-    private ArrayList<Image> mImages;
+    private ArrayList<Image> mAllImages;
+    private ArrayList<Image> mNewImages;
     private ArrayList<Image> mCurrentImages;
     private RecyclerView mImageRecycler;
     private ProgressBar mImagesProgress;
     private ErrorView mImagesErrorView;
+    private ImageListInfo mImageListInfo;
+    /**点击某个分类项目时，如果没有数据，在加载完数据时，要执行分类动作*/
+    private int mNeedToCategoryFilter = -1;
+
+    private MainActivity.OnFilterChangedListener mMainOnFilterChangedListener = new MainActivity.OnFilterChangedListener() {
+        @Override
+        public void onFilterChanged(int filter) {
+            if (ImagesFragment.this.getActivity() instanceof MainActivity) {
+                ((MainActivity) ImagesFragment.this.getActivity()).switchActionBarMenu(filter);
+            }
+            if (filter == MainActivity.Category.NEW.id) {
+                getNewPhotos();
+            } else {
+                showCategory(filter);
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-
         if (ImagesFragment.this.getActivity() instanceof MainActivity) {
-            ((MainActivity) ImagesFragment.this.getActivity()).setOnFilterChangedListener(new MainActivity.OnFilterChangedListener() {
-                @Override
-                public void onFilterChanged(int filter) {
-                    if (mImages != null) {
-                        if (filter == MainActivity.Category.ALL.id) {
-                            showAll();
-                        } else if (filter == MainActivity.Category.FEATURED.id) {
-                            showFeatured();
-                        } else if (filter == MainActivity.Category.LOVED.id) {
-                            //TODO
-                        } else {
-                            showCategory(filter);
-                        }
-                    }
-                }
-            });
+            ((MainActivity) ImagesFragment.this.getActivity()).setOnFilterChangedListener(mMainOnFilterChangedListener);
         }
-
         super.onCreate(savedInstanceState);
     }
 
@@ -92,53 +97,181 @@ public class ImagesFragment extends Fragment {
         mImageAdapter.setOnItemClickListener(recyclerRowClickListener);
         mImageRecycler.setAdapter(mImageAdapter);
 
-        showAll();
-
+        getImageListInfo();
         return rootView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(ImagesFragment.class.getCanonicalName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentStart(ImagesFragment.class.getCanonicalName());
     }
 
-    private void showAll() {
-        if (mImages != null) {
-            updateAdapter(mImages);
+    private void getImageListInfo() {
+        if (mImageListInfo != null) {
+            if (ImagesFragment.this.getActivity() instanceof MainActivity) {
+                ((MainActivity) ImagesFragment.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
+            }
         } else {
             mImagesProgress.setVisibility(View.VISIBLE);
             mImageRecycler.setVisibility(View.GONE);
             mImagesErrorView.setVisibility(View.GONE);
 
-            // Load images from API
-            mApi.fetchImages().cache().subscribeOn(Schedulers.newThread())
+            mApi.getImagesInfo().cache().subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer);
+                    .subscribe(getImageInfoObserver);
         }
     }
 
-    private void showFeatured() {
-        updateAdapter(mApi.filterFeatured(mImages));
+
+    private void getAllPhotos() {
+        if(null == mAllImages){
+            getMorePhotos(0, Math.min(mImageListInfo.getAll(), LeanCloudApi.LOAD_LIMIT));
+        }else {
+            int hasLoad = mAllImages.size();
+            int all = mImageListInfo.getAll();
+            /**全部加载完成*/
+            if (hasLoad >= all) {
+                mImagesProgress.setVisibility(View.GONE);
+                mImageRecycler.setVisibility(View.VISIBLE);
+                mImagesErrorView.setVisibility(View.GONE);
+                /**加载完成数据之后，先判断是否需要跳转分类*/
+                if(mNeedToCategoryFilter > 0){
+                    int category = mNeedToCategoryFilter;
+                    mNeedToCategoryFilter = -1;
+                    showCategory(category);
+                }else {
+                    updateAdapter(mAllImages);
+                }
+            } else {
+                getMorePhotos(hasLoad, Math.min(all - hasLoad,LeanCloudApi.LOAD_LIMIT));
+            }
+        }
     }
+
+    /***
+     * 与getAllPhotos配合使用
+     * @param skip 起点
+     * @param limit 每次加载的数目
+     */
+    private void getMorePhotos(int skip,int limit){
+        mImagesProgress.setVisibility(View.VISIBLE);
+        mImageRecycler.setVisibility(View.GONE);
+        mImagesErrorView.setVisibility(View.GONE);
+
+        mApi.getMoreImages(skip,limit).cache().subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getMoreImageListObserver);
+    }
+
+    private void getNewPhotos() {
+        if (mNewImages != null && mNewImages.size() > 0) {
+            mImagesProgress.setVisibility(View.GONE);
+            mImageRecycler.setVisibility(View.VISIBLE);
+            mImagesErrorView.setVisibility(View.GONE);
+            updateAdapter(mNewImages);
+        } else {
+            mImagesProgress.setVisibility(View.VISIBLE);
+            mImageRecycler.setVisibility(View.GONE);
+            mImagesErrorView.setVisibility(View.GONE);
+
+            mApi.getNewImages().cache().subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(getNewImagesObserver);
+        }
+    }
+
+//    private void showFeatured() {
+//        updateAdapter(mApi.filterFeatured(mAllImages));
+//    }
 
     private void showCategory(int category) {
-        updateAdapter(mApi.filterCategory(mImages, category));
+        if(null == mAllImages || mAllImages.size()==0){
+            mNeedToCategoryFilter = category;
+            getAllPhotos();
+            return;
+        }
+        if (category == MainActivity.Category.ALL.id){
+            updateAdapter(mAllImages);
+            return;
+        }
+        if(category == MainActivity.Category.OTHER.id){
+            updateAdapter(mApi.filterOtherCategory(mAllImages));
+        }else {
+            updateAdapter(mApi.filterCategory(mAllImages, category));
+        }
+
     }
 
-    private Observer<ImageResults> observer = new Observer<ImageResults>() {
-        @Override
-        public void onNext(final ImageResults images) {
-            mImages = images.getResults();
-            updateAdapter(mImages);
 
+    /**获取照片基本信息的回调接口*/
+    private Observer<ImageListInfoResults> getImageInfoObserver = new Observer<ImageListInfoResults>() {
+        @Override
+        public void onNext(final ImageListInfoResults imageListInfoResults) {
+            if(null != imageListInfoResults && null != imageListInfoResults.getResults()){
+                mImageListInfo = imageListInfoResults.getResults().get(0);
+            }
             if (ImagesFragment.this.getActivity() instanceof MainActivity) {
-                ((MainActivity) ImagesFragment.this.getActivity()).setCategoryCount(images);
+                ((MainActivity) ImagesFragment.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
             }
         }
 
         @Override
         public void onCompleted() {
-            // Dismiss loading dialog
+            getNewPhotos();
+        }
+
+        @Override
+        public void onError(final Throwable error) {
+            if (error instanceof RetrofitError) {
+                RetrofitError e = (RetrofitError) error;
+                if (e.getKind() == RetrofitError.Kind.NETWORK) {
+                    mImagesErrorView.setErrorTitle(R.string.error_network);
+                    mImagesErrorView.setErrorSubtitle(R.string.error_network_subtitle);
+                } else if (e.getKind() == RetrofitError.Kind.HTTP) {
+                    mImagesErrorView.setErrorTitle(R.string.error_server);
+                    mImagesErrorView.setErrorSubtitle(R.string.error_server_subtitle);
+                } else {
+                    mImagesErrorView.setErrorTitle(R.string.error_uncommon);
+                    mImagesErrorView.setErrorSubtitle(R.string.error_uncommon_subtitle);
+                }
+            }
+
+            mImagesProgress.setVisibility(View.GONE);
+            mImageRecycler.setVisibility(View.GONE);
+            mImagesErrorView.setVisibility(View.VISIBLE);
+
+            mImagesErrorView.setOnRetryListener(new RetryListener() {
+                @Override
+                public void onRetry() {
+                    getImageListInfo();
+                }
+            });
+        }
+    };
+
+    private Observer<ImageResults> getNewImagesObserver = new Observer<ImageResults>() {
+        @Override
+        public void onNext(final ImageResults images) {
+            mNewImages = images.getResults();
+            updateAdapter(mNewImages);
+            if(null != mNewImages && mNewImages.size() >0){
+                if(null != mImageListInfo)
+                mImageListInfo.setNewPhotoUpdateTime(Utils.FormatDateFromStr(mNewImages.get(0).getUpdatedAt()));
+            }
+            if (ImagesFragment.this.getActivity() instanceof MainActivity) {
+                ((MainActivity) ImagesFragment.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
+            }
+        }
+
+        @Override
+        public void onCompleted() {
             mImagesProgress.setVisibility(View.GONE);
             mImageRecycler.setVisibility(View.VISIBLE);
             mImagesErrorView.setVisibility(View.GONE);
@@ -167,7 +300,48 @@ public class ImagesFragment extends Fragment {
             mImagesErrorView.setOnRetryListener(new RetryListener() {
                 @Override
                 public void onRetry() {
-                    showAll();
+                    getNewPhotos();
+                }
+            });
+        }
+    };
+
+    private Observer<ImageResults> getMoreImageListObserver = new Observer<ImageResults>() {
+        @Override
+        public void onNext(final ImageResults images) {
+            if(null == mAllImages)mAllImages = new ArrayList<>();
+            if(null != images.getResults())mAllImages.addAll(images.getResults());
+        }
+
+        @Override
+        public void onCompleted() {
+            getAllPhotos();
+        }
+
+        @Override
+        public void onError(final Throwable error) {
+            if (error instanceof RetrofitError) {
+                RetrofitError e = (RetrofitError) error;
+                if (e.getKind() == RetrofitError.Kind.NETWORK) {
+                    mImagesErrorView.setErrorTitle(R.string.error_network);
+                    mImagesErrorView.setErrorSubtitle(R.string.error_network_subtitle);
+                } else if (e.getKind() == RetrofitError.Kind.HTTP) {
+                    mImagesErrorView.setErrorTitle(R.string.error_server);
+                    mImagesErrorView.setErrorSubtitle(R.string.error_server_subtitle);
+                } else {
+                    mImagesErrorView.setErrorTitle(R.string.error_uncommon);
+                    mImagesErrorView.setErrorSubtitle(R.string.error_uncommon_subtitle);
+                }
+            }
+
+            mImagesProgress.setVisibility(View.GONE);
+            mImageRecycler.setVisibility(View.GONE);
+            mImagesErrorView.setVisibility(View.VISIBLE);
+
+            mImagesErrorView.setOnRetryListener(new RetryListener() {
+                @Override
+                public void onRetry() {
+                    getAllPhotos();
                 }
             });
         }
@@ -219,9 +393,8 @@ public class ImagesFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.action_shuffle) {
-            if (mImages != null) {
-                //we don't want to shuffle the original list
-                ArrayList<Image> shuffled = new ArrayList<Image>(mImages);
+            if (mAllImages != null) {
+                ArrayList<Image> shuffled = new ArrayList<>(mAllImages);
                 Collections.shuffle(shuffled);
                 mImageAdapter.updateData(shuffled);
                 updateAdapter(shuffled);
@@ -239,10 +412,5 @@ public class ImagesFragment extends Fragment {
         mCurrentImages = images;
         mImageAdapter.updateData(mCurrentImages);
         mImageRecycler.scrollToPosition(0);
-        /*
-        mImageAdapter = new ImageAdapter(images);
-        mImageAdapter.setOnItemClickListener(recyclerRowClickListener);
-        mImageRecycler.setAdapter(mImageAdapter);
-        */
     }
 }
