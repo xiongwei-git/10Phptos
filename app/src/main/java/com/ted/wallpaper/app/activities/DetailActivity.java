@@ -47,6 +47,7 @@ import com.ted.wallpaper.app.R;
 import com.ted.wallpaper.app.fragments.DirectoryChooserFragment;
 import com.ted.wallpaper.app.fragments.ImagesFragment;
 import com.ted.wallpaper.app.models.Image;
+import com.ted.wallpaper.app.other.Constants;
 import com.ted.wallpaper.app.other.CustomAnimatorListener;
 import com.ted.wallpaper.app.other.CustomTransitionListener;
 import com.ted.wallpaper.app.other.PaletteTransformation;
@@ -244,7 +245,7 @@ public class DetailActivity extends ActionBarActivity {
             if (future == null) {
                 //prepare the call
                 future = Ion.with(DetailActivity.this)
-                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight))
+                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight, Constants.SERVER_TYPE_IMGIX))
                         .progressHandler(progressCallback)
                         .asInputStream();
 
@@ -364,7 +365,7 @@ public class DetailActivity extends ActionBarActivity {
             if (future == null) {
                 //prepare the call
                 future = Ion.with(DetailActivity.this)
-                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight))
+                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight, Constants.SERVER_TYPE_IMGIX))
                         .progressHandler(progressCallback)
                         .asInputStream();
 
@@ -395,7 +396,7 @@ public class DetailActivity extends ActionBarActivity {
             if (future == null) {
                 //prepare the call
                 future = Ion.with(DetailActivity.this)
-                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight))
+                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight, Constants.SERVER_TYPE_IMGIX))
                         .progressHandler(progressCallback)
                         .asInputStream();
 

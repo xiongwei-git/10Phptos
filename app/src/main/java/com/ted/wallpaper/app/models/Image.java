@@ -38,7 +38,7 @@ public class Image implements Serializable {
         return image_src;
     }
 
-    public String getHighResImage(int minWidth, int minHeight) {
+    public String getHighResImage(int minWidth, int minHeight, int serverType) {
         String url = image_src + "?fm=png";
 
         //minimize processing costs of unsplash image hosting
@@ -62,7 +62,7 @@ public class Image implements Serializable {
         return url;
     }
 
-    public String getImageSrc(int screenWidth) {
+    public String getImageSrc(int screenWidth,int serverType) {
         return image_src + "?q=75&fm=jpg&w=" + Utils.optimalImageWidth(screenWidth);
 
         /*
