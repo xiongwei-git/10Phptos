@@ -1,6 +1,7 @@
 package com.ted.wallpaper.app.models;
 
 import android.support.v7.graphics.Palette;
+import com.ted.wallpaper.app.other.Constants;
 import com.ted.wallpaper.app.utils.Utils;
 
 import java.io.Serializable;
@@ -23,6 +24,7 @@ public class Image implements Serializable {
     private int height;
     private int featured;
     private int category;
+    private String server_type;
 
     transient private Palette.Swatch swatch;
 
@@ -38,12 +40,11 @@ public class Image implements Serializable {
         return image_src;
     }
 
-    public String getHighResImage(int minWidth, int minHeight, int serverType) {
+    public String getHighResImage(int minWidth, int minHeight) {
+        if(getServerType() == Constants.SERVER_TYPE_QINIU){
+            return getQiNiuHighResImage(minWidth,minHeight);
+        }
         String url = image_src + "?fm=png";
-
-        //minimize processing costs of unsplash image hosting
-        //try to eliminate the white line on top
-
         if (minWidth > 0 && minHeight > 0) {
             float phoneRatio = (1.0f * minWidth) / minHeight;
             if (phoneRatio < getRatio()) {
@@ -62,7 +63,29 @@ public class Image implements Serializable {
         return url;
     }
 
-    public String getImageSrc(int screenWidth,int serverType) {
+    public String getQiNiuHighResImage(int minWidth, int minHeight) {
+        String url = image_src;//h.1080;
+        if (minWidth > 0 && minHeight > 0) {
+            float phoneRatio = (1.0f * minWidth) / minHeight;
+            if (phoneRatio < getRatio()) {
+                if (minHeight < 1080) {
+                    url = url + "/fm.png." + "h." + 1080;
+                }
+            } else {
+                if (minWidth < 1920) {
+                    url = url + "/fm.png." + "w." + 1920;
+                }
+            }
+        }
+        return url;
+    }
+
+
+
+    public String getImageSrc(int screenWidth) {
+        if(getServerType() == Constants.SERVER_TYPE_QINIU){
+            return getQiNiuImageSrc(screenWidth);
+        }
         return image_src + "?q=75&fm=jpg&w=" + Utils.optimalImageWidth(screenWidth);
 
         /*
@@ -76,6 +99,10 @@ public class Image implements Serializable {
 
         return url;
         */
+    }
+
+    public String getQiNiuImageSrc(int screenWidth) {
+        return image_src + "/q75.w" + Utils.optimalImageWidth(screenWidth);
     }
 
     public void setImageSrc(String image_src) {
@@ -176,5 +203,20 @@ public class Image implements Serializable {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getServer_type() {
+        return server_type;
+    }
+
+    public void setServer_type(String server_type) {
+        this.server_type = server_type;
+    }
+
+    public int getServerType() {
+        if("qiniu".equalsIgnoreCase(getServer_type())){
+            return Constants.SERVER_TYPE_QINIU;
+        }
+        return Constants.SERVER_TYPE_IMGIX;
     }
 }

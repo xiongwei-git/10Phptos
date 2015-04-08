@@ -245,7 +245,7 @@ public class DetailActivity extends ActionBarActivity {
             if (future == null) {
                 //prepare the call
                 future = Ion.with(DetailActivity.this)
-                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight, Constants.SERVER_TYPE_IMGIX))
+                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight))
                         .progressHandler(progressCallback)
                         .asInputStream();
 
@@ -365,7 +365,7 @@ public class DetailActivity extends ActionBarActivity {
             if (future == null) {
                 //prepare the call
                 future = Ion.with(DetailActivity.this)
-                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight, Constants.SERVER_TYPE_IMGIX))
+                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight))
                         .progressHandler(progressCallback)
                         .asInputStream();
 
@@ -396,7 +396,7 @@ public class DetailActivity extends ActionBarActivity {
             if (future == null) {
                 //prepare the call
                 future = Ion.with(DetailActivity.this)
-                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight, Constants.SERVER_TYPE_IMGIX))
+                        .load(mSelectedImage.getHighResImage(mWallpaperWidth, mWallpaperHeight))
                         .progressHandler(progressCallback)
                         .asInputStream();
 
@@ -480,7 +480,7 @@ public class DetailActivity extends ActionBarActivity {
                         try {
                             //prepare the file name
                             String url = mSelectedImage.getUrl();
-                            String fileName = url.substring(url.lastIndexOf('/') + 1, url.length()) + ".jpg";
+                            String fileName = url.substring(url.lastIndexOf('/') + 1, url.length()) + (url.endsWith(".jpg")?"":".jpg");
 
                             File dir;
                             if (TextUtils.isEmpty(customLocation)) {
