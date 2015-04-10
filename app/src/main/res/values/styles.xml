@@ -1,4 +1,7 @@
 <resources>
+    <style name="AppThemeV2" parent="Theme.AppCompat.NoActionBar">
+    </style>
+
     <style name="AppTheme" parent="MaterialDrawerTheme.TranslucentStatus">
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>

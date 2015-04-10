@@ -9,6 +9,9 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
     </style>
 
+    <style name="AppThemeV2" parent="Theme.AppCompat.NoActionBar">
+    </style>
+
     <style name="AppTheme.DetailActivity" parent="MaterialDrawerTheme.TranslucentStatus">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
