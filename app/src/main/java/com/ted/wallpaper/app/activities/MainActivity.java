@@ -101,9 +101,9 @@ public class MainActivity extends ActionBarActivity {
         result.getListView().setVerticalScrollBarEnabled(false);
     }
 
-    /**
-     * @param images
-     */
+//    /**
+//     * @param images
+//     */
 //    public void setCategoryCount(ImageResults images) {
 //        if (result.getDrawerItems() != null && result.getDrawerItems().size() == 9 && images != null && images.getResults() != null) {
 //            result.updateBadge(images.getResults().size() + "", 0);

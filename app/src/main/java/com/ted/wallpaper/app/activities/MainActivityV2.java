@@ -17,9 +17,11 @@ import com.avos.avoscloud.AVAnalytics;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.ted.wallpaper.app.R;
 import com.ted.wallpaper.app.fragments.ContentFragment;
+import com.ted.wallpaper.app.fragments.ImagesFragmentV2;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 import yalantis.com.sidemenu.interfaces.Resourceble;
@@ -35,7 +37,7 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private List<SlideMenuItem> list = new ArrayList<>();
-    private ContentFragment contentFragment;
+    private ImagesFragmentV2 contentFragment;
     private ViewAnimator viewAnimator;
     private int res = R.drawable.content_music;
     private LinearLayout linearLayout;
@@ -45,6 +47,7 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
     private int mNowCategory = -1;
 
     public enum Category {
+        CLOSE(-1),
         NEW(1000),
         ALL(1001),
         LOVED(1002),
@@ -64,15 +67,6 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
         }
     }
 
-
-    public Drawer.Result result;
-
-    private OnFilterChangedListener onFilterChangedListener;
-
-    public void setOnFilterChangedListener(OnFilterChangedListener onFilterChangedListener) {
-        this.onFilterChangedListener = onFilterChangedListener;
-    }
-
     @Override
     public void addViewToContainer(View view) {
         linearLayout.addView(view);
@@ -80,11 +74,10 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
 
     @Override
     public ScreenShotable onSwitch(Resourceble resourceble, ScreenShotable screenShotable, int position) {
-        switch (resourceble.getName()) {
-            case ContentFragment.CLOSE:
-                return screenShotable;
-            default:
-                return replaceFragment(screenShotable, position);
+        if(resourceble.getCategoryId() < 0){
+            return screenShotable;
+        }else {
+            return replaceFragment(screenShotable, position);
         }
     }
 
@@ -103,7 +96,7 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_v2);
-        contentFragment = ContentFragment.newInstance(R.drawable.content_music);
+        contentFragment = new ImagesFragmentV2();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, contentFragment)
                 .commit();
@@ -116,69 +109,32 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
                 drawerLayout.closeDrawers();
             }
         });
-
-
         setActionBar();
         createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
-
-//        final Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
-//        toolbar.setTitleTextColor(Color.WHITE);
-//        setSupportActionBar(toolbar);
-//
-//        result = new Drawer()
-//                .withActivity(this)
-//                .withToolbar(toolbar)
-//                .withHeader(R.layout.header)
-//                .addDrawerItems(
-//                        new PrimaryDrawerItem().withName(R.string.category_new_10).withIdentifier(Category.NEW.id).withIcon(GoogleMaterial.Icon.gmd_filter_9_plus),
-//                        new PrimaryDrawerItem().withName(R.string.category_all).withIdentifier(Category.ALL.id).withIcon(GoogleMaterial.Icon.gmd_perm_media),
-//                        //new PrimaryDrawerItem().withName(R.string.category_loved).withIdentifier(Category.LOVED.id).withIcon(GoogleMaterial.Icon.gmd_favorite),
-//                        new SectionDrawerItem().withName(R.string.category_section_categories),
-//                        new PrimaryDrawerItem().withName(R.string.category_buildings).withIdentifier(Category.BUILDINGS.id).withIcon(GoogleMaterial.Icon.gmd_location_city),
-//                        new PrimaryDrawerItem().withName(R.string.category_food).withIdentifier(Category.FOOD.id).withIcon(GoogleMaterial.Icon.gmd_local_bar),
-//                        new PrimaryDrawerItem().withName(R.string.category_nature).withIdentifier(Category.NATURE.id).withIcon(GoogleMaterial.Icon.gmd_local_florist),
-//                        new PrimaryDrawerItem().withName(R.string.category_objects).withIdentifier(Category.OBJECTS.id).withIcon(GoogleMaterial.Icon.gmd_style),
-//                        new PrimaryDrawerItem().withName(R.string.category_people).withIdentifier(Category.PEOPLE.id).withIcon(GoogleMaterial.Icon.gmd_person),
-//                        new PrimaryDrawerItem().withName(R.string.category_technology).withIdentifier(Category.TECHNOLOGY.id).withIcon(GoogleMaterial.Icon.gmd_local_see),
-//                        new PrimaryDrawerItem().withName(R.string.category_other).withIdentifier(Category.OTHER.id).withIcon(GoogleMaterial.Icon.gmd_loyalty)
-//        )
-//                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem drawerItem) {
-//                        if (drawerItem != null) {
-//                            if (drawerItem instanceof Nameable) {
-//                                toolbar.setTitle(((Nameable) drawerItem).getNameRes());
-//                            }
-//                            if (onFilterChangedListener != null) {
-//                                onFilterChangedListener.onFilterChanged(drawerItem.getIdentifier());
-//                            }
-//                        }
-//                    }
-//                })
-//                .build();
-//
-//        //disable scrollbar :D it's ugly
-//        result.getListView().setVerticalScrollBarEnabled(false);
     }
 
     private void createMenuList() {
-        SlideMenuItem menuItem0 = new SlideMenuItem().setName(ContentFragment.CLOSE).setIicon(GoogleMaterial.Icon.gmd_filter_9_plus);
-        list.add(menuItem0);
-        SlideMenuItem menuItem1 = new SlideMenuItem().setName(ContentFragment.BUILDING).setIicon(GoogleMaterial.Icon.gmd_filter_9_plus);
-        list.add(menuItem1);
-        SlideMenuItem menuItem2 = new SlideMenuItem(ContentFragment.BOOK, R.drawable.icn_2);
-        list.add(menuItem2);
-        SlideMenuItem menuItem3 = new SlideMenuItem(ContentFragment.PAINT, R.drawable.icn_3);
-        list.add(menuItem3);
-        SlideMenuItem menuItem4 = new SlideMenuItem(ContentFragment.CASE, R.drawable.icn_4);
-        list.add(menuItem4);
-        SlideMenuItem menuItem5 = new SlideMenuItem(ContentFragment.SHOP, R.drawable.icn_5);
-        list.add(menuItem5);
-        SlideMenuItem menuItem6 = new SlideMenuItem(ContentFragment.PARTY, R.drawable.icn_6);
-        list.add(menuItem6);
-        SlideMenuItem menuItem7 = new SlideMenuItem(ContentFragment.MOVIE, R.drawable.icn_7);
-        list.add(menuItem7);
+        SlideMenuItem menuClose = new SlideMenuItem().setItemCategoryId(Category.CLOSE.id).setIicon(GoogleMaterial.Icon.gmd_arrow_back);
+        list.add(menuClose);
+        SlideMenuItem menuNew = new SlideMenuItem().setItemCategoryId(Category.NEW.id).setIicon(GoogleMaterial.Icon.gmd_filter_9_plus);
+        list.add(menuNew);
+        SlideMenuItem menuAll = new SlideMenuItem().setItemCategoryId(Category.ALL.id).setIicon(GoogleMaterial.Icon.gmd_perm_media);
+        list.add(menuAll);
+        SlideMenuItem menuBuild = new SlideMenuItem().setItemCategoryId(Category.BUILDINGS.id).setIicon(GoogleMaterial.Icon.gmd_location_city);
+        list.add(menuBuild);
+        SlideMenuItem menuFood = new SlideMenuItem().setItemCategoryId(Category.FOOD.id).setIicon(GoogleMaterial.Icon.gmd_local_bar);
+        list.add(menuFood);
+        SlideMenuItem menuNature = new SlideMenuItem().setItemCategoryId(Category.NATURE.id).setIicon(GoogleMaterial.Icon.gmd_local_florist);
+        list.add(menuNature);
+        SlideMenuItem menuObject = new SlideMenuItem().setItemCategoryId(Category.OBJECTS.id).setIicon(GoogleMaterial.Icon.gmd_style);
+        list.add(menuObject);
+        SlideMenuItem menuPeople = new SlideMenuItem().setItemCategoryId(Category.PEOPLE.id).setIicon(GoogleMaterial.Icon.gmd_person);
+        list.add(menuPeople);
+        SlideMenuItem menuTechnology = new SlideMenuItem().setItemCategoryId(Category.TECHNOLOGY.id).setIicon(GoogleMaterial.Icon.gmd_local_see);
+        list.add(menuTechnology);
+        SlideMenuItem menuOther = new SlideMenuItem().setItemCategoryId(Category.OTHER.id).setIicon(GoogleMaterial.Icon.gmd_loyalty);
+        list.add(menuOther);
     }
 
 
@@ -241,30 +197,6 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-//    /***
-//     * 更新分类信息
-//     * @param imageListInfo
-//     */
-//    public void updateImageCategoryInfo(ImageListInfo imageListInfo) {
-//        if (result.getDrawerItems() != null && result.getDrawerItems().size() == 10 && imageListInfo != null) {
-//            Resources res = getResources();
-//            String updateTime = Utils.getFormatDateStr(imageListInfo.getNewPhotoUpdateTime());
-//            updateTime = TextUtils.isEmpty(updateTime)?res.getString(R.string.update_time_default):res.getString(R.string.update_time_auto,updateTime);
-//            result.updateBadge(updateTime, 0);
-//            result.updateBadge(String.valueOf(imageListInfo.getAll()), 1);
-//
-//            result.updateBadge(String.valueOf(imageListInfo.getBuilding()), 3);
-//            result.updateBadge(String.valueOf(imageListInfo.getFood()), 4);
-//            result.updateBadge(String.valueOf(imageListInfo.getNature()), 5);
-//            result.updateBadge(String.valueOf(imageListInfo.getObject()), 6);
-//            result.updateBadge(String.valueOf(imageListInfo.getPeople()), 7);
-//            result.updateBadge(String.valueOf(imageListInfo.getTechnology()), 8);
-//            result.updateBadge(String.valueOf(imageListInfo.getOther()+imageListInfo.getFeatured()), 9);
-//        }
-//    }
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -300,7 +232,7 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
         animator.setInterpolator(new AccelerateInterpolator());
         animator.setDuration(ViewAnimator.CIRCULAR_REVEAL_ANIMATION_DURATION);
 
-        findViewById(R.id.content_overlay).setBackgroundDrawable(new BitmapDrawable(getResources(), screenShotable.getBitmap()));
+        findViewById(R.id.content_overlay).setBackground(new BitmapDrawable(getResources(), screenShotable.getBitmap()));
         animator.start();
         ContentFragment contentFragment = ContentFragment.newInstance(this.res);
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();

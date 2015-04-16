@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/menu_item_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/menu_item_width"
+        android:layout_height="@dimen/menu_item_height"
         android:layout_centerInParent="true"/>
 
 

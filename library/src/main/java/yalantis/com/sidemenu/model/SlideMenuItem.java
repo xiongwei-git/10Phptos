@@ -10,6 +10,7 @@ public class SlideMenuItem implements Resourceble {
     private String name;
     private int imageRes;
     private IIcon iicon;
+    private int itemCategoryId;
 
     public SlideMenuItem() {
     }
@@ -19,17 +20,29 @@ public class SlideMenuItem implements Resourceble {
         this.imageRes = imageRes;
     }
 
+    @Override
+    public int getCategoryId() {
+        return itemCategoryId;
+    }
+
+    @Override
+    public int getImageRes() {
+        return imageRes;
+    }
+
+    @Override
     public String getName() {
         return name;
+    }
+
+    public SlideMenuItem setItemCategoryId(int itemCategoryId) {
+        this.itemCategoryId = itemCategoryId;
+        return this;
     }
 
     public SlideMenuItem setName(String name) {
         this.name = name;
         return this;
-    }
-
-    public int getImageRes() {
-        return imageRes;
     }
 
     public SlideMenuItem setImageRes(int imageRes) {
