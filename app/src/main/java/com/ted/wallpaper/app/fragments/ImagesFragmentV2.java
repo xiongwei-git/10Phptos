@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +20,7 @@ import com.avos.avoscloud.AVAnalytics;
 import com.ted.wallpaper.app.R;
 import com.ted.wallpaper.app.activities.DetailActivity;
 import com.ted.wallpaper.app.activities.MainActivity;
+import com.ted.wallpaper.app.activities.MainActivityV2;
 import com.ted.wallpaper.app.adapters.ImageAdapter;
 import com.ted.wallpaper.app.models.Image;
 import com.ted.wallpaper.app.models.leancloud.ImageListInfo;
@@ -57,13 +59,13 @@ public class ImagesFragmentV2 extends Fragment implements ScreenShotable {
     /**点击某个分类项目时，如果没有数据，在加载完数据时，要执行分类动作*/
     private int mNeedToCategoryFilter = -1;
 
-    private MainActivity.OnFilterChangedListener mMainOnFilterChangedListener = new MainActivity.OnFilterChangedListener() {
+    private MainActivityV2.OnFilterChangedListener mMainOnFilterChangedListener = new MainActivityV2.OnFilterChangedListener() {
         @Override
         public void onFilterChanged(int filter) {
-            if (ImagesFragmentV2.this.getActivity() instanceof MainActivity) {
-                ((MainActivity) ImagesFragmentV2.this.getActivity()).switchActionBarMenu(filter);
+            if (ImagesFragmentV2.this.getActivity() instanceof MainActivityV2) {
+                ((MainActivityV2) ImagesFragmentV2.this.getActivity()).switchActionBarMenu(filter);
             }
-            if (filter == MainActivity.Category.NEW.id) {
+            if (filter == MainActivityV2.Category.NEW.id) {
                 getNewPhotos();
             } else {
                 showCategory(filter);
@@ -74,8 +76,8 @@ public class ImagesFragmentV2 extends Fragment implements ScreenShotable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        if (ImagesFragmentV2.this.getActivity() instanceof MainActivity) {
-            ((MainActivity) ImagesFragmentV2.this.getActivity()).setOnFilterChangedListener(mMainOnFilterChangedListener);
+        if (ImagesFragmentV2.this.getActivity() instanceof MainActivityV2) {
+            ((MainActivityV2) ImagesFragmentV2.this.getActivity()).setOnFilterChangedListener(mMainOnFilterChangedListener);
         }
         super.onCreate(savedInstanceState);
     }
@@ -103,6 +105,12 @@ public class ImagesFragmentV2 extends Fragment implements ScreenShotable {
 
         getImageListInfo();
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view,Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.containerView = view.findViewById(R.id.container);
     }
 
     @Override
@@ -140,8 +148,8 @@ public class ImagesFragmentV2 extends Fragment implements ScreenShotable {
 
     private void getImageListInfo() {
         if (mImageListInfo != null) {
-            if (ImagesFragmentV2.this.getActivity() instanceof MainActivity) {
-                ((MainActivity) ImagesFragmentV2.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
+            if (ImagesFragmentV2.this.getActivity() instanceof MainActivityV2) {
+                ((MainActivityV2) ImagesFragmentV2.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
             }
         } else {
             mImagesProgress.setVisibility(View.VISIBLE);
@@ -222,11 +230,11 @@ public class ImagesFragmentV2 extends Fragment implements ScreenShotable {
             getAllPhotos();
             return;
         }
-        if (category == MainActivity.Category.ALL.id){
+        if (category == MainActivityV2.Category.ALL.id){
             updateAdapter(mAllImages);
             return;
         }
-        if(category == MainActivity.Category.OTHER.id){
+        if(category == MainActivityV2.Category.OTHER.id){
             updateAdapter(mApi.filterOtherCategory(mAllImages));
         }else {
             updateAdapter(mApi.filterCategory(mAllImages, category));
@@ -242,8 +250,8 @@ public class ImagesFragmentV2 extends Fragment implements ScreenShotable {
             if(null != imageListInfoResults && null != imageListInfoResults.getResults()){
                 mImageListInfo = imageListInfoResults.getResults().get(0);
             }
-            if (ImagesFragmentV2.this.getActivity() instanceof MainActivity) {
-                ((MainActivity) ImagesFragmentV2.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
+            if (ImagesFragmentV2.this.getActivity() instanceof MainActivityV2) {
+                ((MainActivityV2) ImagesFragmentV2.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
             }
         }
 
@@ -290,8 +298,8 @@ public class ImagesFragmentV2 extends Fragment implements ScreenShotable {
                 if(null != mImageListInfo)
                 mImageListInfo.setNewPhotoUpdateTime(Utils.FormatDateFromStr(mNewImages.get(0).getUpdatedAt()));
             }
-            if (ImagesFragmentV2.this.getActivity() instanceof MainActivity) {
-                ((MainActivity) ImagesFragmentV2.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
+            if (ImagesFragmentV2.this.getActivity() instanceof MainActivityV2) {
+                ((MainActivityV2) ImagesFragmentV2.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
             }
         }
 

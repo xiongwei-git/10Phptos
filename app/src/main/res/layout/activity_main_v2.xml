@@ -16,20 +16,22 @@
                 android:id="@+id/content_overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="?attr/actionBarSize"
                 android:orientation="vertical"/>
 
         <LinearLayout
                 android:id="@+id/content_frame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="?attr/actionBarSize"
                 android:orientation="vertical"/>
 
         <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:minHeight="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"/>
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:elevation="4dp"/>
 
     </io.codetail.widget.RevealFrameLayout>
 

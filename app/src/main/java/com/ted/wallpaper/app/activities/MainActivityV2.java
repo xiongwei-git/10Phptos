@@ -17,11 +17,9 @@ import com.avos.avoscloud.AVAnalytics;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.iconics.typeface.FontAwesome;
-import com.mikepenz.materialdrawer.Drawer;
 import com.ted.wallpaper.app.R;
-import com.ted.wallpaper.app.fragments.ContentFragment;
 import com.ted.wallpaper.app.fragments.ImagesFragmentV2;
+import com.ted.wallpaper.app.models.leancloud.ImageListInfo;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 import yalantis.com.sidemenu.interfaces.Resourceble;
@@ -39,7 +37,6 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
     private List<SlideMenuItem> list = new ArrayList<>();
     private ImagesFragmentV2 contentFragment;
     private ViewAnimator viewAnimator;
-    private int res = R.drawable.content_music;
     private LinearLayout linearLayout;
 
 
@@ -67,6 +64,12 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
         }
     }
 
+    private OnFilterChangedListener onFilterChangedListener;
+
+    public void setOnFilterChangedListener(OnFilterChangedListener onFilterChangedListener) {
+        this.onFilterChangedListener = onFilterChangedListener;
+    }
+
     @Override
     public void addViewToContainer(View view) {
         linearLayout.addView(view);
@@ -77,7 +80,7 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
         if(resourceble.getCategoryId() < 0){
             return screenShotable;
         }else {
-            return replaceFragment(screenShotable, position);
+            return changeFragment(screenShotable, position,resourceble.getCategoryId());
         }
     }
 
@@ -224,8 +227,7 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
         return false;
     }
 
-    private ScreenShotable replaceFragment(ScreenShotable screenShotable, int topPosition) {
-        this.res = this.res == R.drawable.content_music ? R.drawable.content_films : R.drawable.content_music;
+    private ScreenShotable changeFragment(ScreenShotable screenShotable, int topPosition,int categoryId) {
         View view = findViewById(R.id.content_frame);
         int finalRadius = Math.max(view.getWidth(), view.getHeight());
         SupportAnimator animator = ViewAnimationUtils.createCircularReveal(view, 0, topPosition, 0, finalRadius);
@@ -234,8 +236,11 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
 
         findViewById(R.id.content_overlay).setBackground(new BitmapDrawable(getResources(), screenShotable.getBitmap()));
         animator.start();
-        ContentFragment contentFragment = ContentFragment.newInstance(this.res);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
+        if(null == contentFragment) contentFragment = new ImagesFragmentV2();
+        if (onFilterChangedListener != null) {
+            onFilterChangedListener.onFilterChanged(categoryId);
+        }
+        //getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
         return contentFragment;
     }
 
@@ -246,5 +251,27 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
 
     public interface OnFilterChangedListener {
         void onFilterChanged(int filter);
+    }
+
+    /***
+     * 更新分类信息
+     * @param imageListInfo
+     */
+    public void updateImageCategoryInfo(ImageListInfo imageListInfo) {
+//        if (result.getDrawerItems() != null && result.getDrawerItems().size() == 10 && imageListInfo != null) {
+//            Resources res = getResources();
+//            String updateTime = Utils.getFormatDateStr(imageListInfo.getNewPhotoUpdateTime());
+//            updateTime = TextUtils.isEmpty(updateTime)?res.getString(R.string.update_time_default):res.getString(R.string.update_time_auto,updateTime);
+//            result.updateBadge(updateTime, 0);
+//            result.updateBadge(String.valueOf(imageListInfo.getAll()), 1);
+//
+//            result.updateBadge(String.valueOf(imageListInfo.getBuilding()), 3);
+//            result.updateBadge(String.valueOf(imageListInfo.getFood()), 4);
+//            result.updateBadge(String.valueOf(imageListInfo.getNature()), 5);
+//            result.updateBadge(String.valueOf(imageListInfo.getObject()), 6);
+//            result.updateBadge(String.valueOf(imageListInfo.getPeople()), 7);
+//            result.updateBadge(String.valueOf(imageListInfo.getTechnology()), 8);
+//            result.updateBadge(String.valueOf(imageListInfo.getOther()+imageListInfo.getFeatured()), 9);
+//        }
     }
 }
