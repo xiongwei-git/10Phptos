@@ -1,6 +1,7 @@
 package com.ted.wallpaper.app.fragments;
 
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import com.avos.avoscloud.AVAnalytics;
 import com.ted.wallpaper.app.R;
 import com.ted.wallpaper.app.activities.DetailActivity;
-import com.ted.wallpaper.app.activities.MainActivity;
 import com.ted.wallpaper.app.activities.MainActivityV2;
 import com.ted.wallpaper.app.adapters.ImageAdapter;
 import com.ted.wallpaper.app.models.Image;
@@ -64,6 +63,7 @@ public class ImagesFragmentV2 extends Fragment implements ScreenShotable {
         public void onFilterChanged(int filter) {
             if (ImagesFragmentV2.this.getActivity() instanceof MainActivityV2) {
                 ((MainActivityV2) ImagesFragmentV2.this.getActivity()).switchActionBarMenu(filter);
+                ((MainActivityV2) ImagesFragmentV2.this.getActivity()).updateImageCategoryInfo(mImageListInfo);
             }
             if (filter == MainActivityV2.Category.NEW.id) {
                 getNewPhotos();
@@ -415,7 +415,7 @@ public class ImagesFragmentV2 extends Fragment implements ScreenShotable {
                     // Setup the transition to the detail activity
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), coverImage, "cover");
 
-                    getActivity().startActivity(detailIntent, options.toBundle());
+                    startActivity(detailIntent, options.toBundle());
                 }
             }
         }

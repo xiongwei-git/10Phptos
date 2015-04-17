@@ -1,0 +1,13 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="toolbar_title_style">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="toolbar_subtitle_style">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#c6cbe9</item>
+    </style>
+
+</resources>

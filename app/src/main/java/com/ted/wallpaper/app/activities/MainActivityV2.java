@@ -1,6 +1,8 @@
 package com.ted.wallpaper.app.activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +23,8 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.ted.wallpaper.app.R;
 import com.ted.wallpaper.app.fragments.ImagesFragmentV2;
 import com.ted.wallpaper.app.models.leancloud.ImageListInfo;
+import com.ted.wallpaper.app.other.Constants;
+import com.ted.wallpaper.app.utils.Utils;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 import yalantis.com.sidemenu.interfaces.Resourceble;
@@ -34,27 +39,27 @@ import java.util.List;
 public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.ViewAnimatorListener{
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
+    private Toolbar toolbar;
     private List<SlideMenuItem> list = new ArrayList<>();
     private ImagesFragmentV2 contentFragment;
     private ViewAnimator viewAnimator;
     private LinearLayout linearLayout;
 
-
     /**当前的分类选择*/
-    private int mNowCategory = -1;
+    private int mNowCategory = Constants.NEW;
 
     public enum Category {
-        CLOSE(-1),
-        NEW(1000),
-        ALL(1001),
-        LOVED(1002),
-        BUILDINGS(1),
-        FOOD(2),
-        NATURE(4),
-        PEOPLE(8),
-        TECHNOLOGY(16),
-        OBJECTS(32),
-        OTHER(64);
+        CLOSE(Constants.CLOSE),
+        NEW(Constants.NEW),
+        ALL(Constants.ALL),
+        LOVED(Constants.LOVED),
+        BUILDINGS(Constants.BUILDINGS),
+        FOOD(Constants.FOOD),
+        NATURE(Constants.NATURE),
+        PEOPLE(Constants.PEOPLE),
+        TECHNOLOGY(Constants.TECHNOLOGY),
+        OBJECTS(Constants.OBJECTS),
+        OTHER(Constants.OTHER);
 
 
         public final int id;
@@ -77,10 +82,10 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
 
     @Override
     public ScreenShotable onSwitch(Resourceble resourceble, ScreenShotable screenShotable, int position) {
-        if(resourceble.getCategoryId() < 0){
+        if(resourceble.getCategoryId() < 0 || resourceble.getCategoryId() == mNowCategory){
             return screenShotable;
         }else {
-            return changeFragment(screenShotable, position,resourceble.getCategoryId());
+            return changeFragment(screenShotable, position, resourceble.getCategoryId());
         }
     }
 
@@ -100,7 +105,7 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_v2);
         contentFragment = new ImagesFragmentV2();
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, contentFragment)
                 .commit();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,7 +147,7 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
 
 
     private void setActionBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -165,7 +170,7 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
                 if (slideOffset > 0.6 && linearLayout.getChildCount() == 0)
-                    viewAnimator.showMenuContent();
+                    viewAnimator.showMenuContent(mNowCategory);
             }
 
             /** Called when a drawer has settled in a completely open state. */
@@ -240,7 +245,6 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
         if (onFilterChangedListener != null) {
             onFilterChangedListener.onFilterChanged(categoryId);
         }
-        //getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
         return contentFragment;
     }
 
@@ -258,20 +262,58 @@ public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.Vi
      * @param imageListInfo
      */
     public void updateImageCategoryInfo(ImageListInfo imageListInfo) {
-//        if (result.getDrawerItems() != null && result.getDrawerItems().size() == 10 && imageListInfo != null) {
-//            Resources res = getResources();
-//            String updateTime = Utils.getFormatDateStr(imageListInfo.getNewPhotoUpdateTime());
-//            updateTime = TextUtils.isEmpty(updateTime)?res.getString(R.string.update_time_default):res.getString(R.string.update_time_auto,updateTime);
-//            result.updateBadge(updateTime, 0);
-//            result.updateBadge(String.valueOf(imageListInfo.getAll()), 1);
-//
-//            result.updateBadge(String.valueOf(imageListInfo.getBuilding()), 3);
-//            result.updateBadge(String.valueOf(imageListInfo.getFood()), 4);
-//            result.updateBadge(String.valueOf(imageListInfo.getNature()), 5);
-//            result.updateBadge(String.valueOf(imageListInfo.getObject()), 6);
-//            result.updateBadge(String.valueOf(imageListInfo.getPeople()), 7);
-//            result.updateBadge(String.valueOf(imageListInfo.getTechnology()), 8);
-//            result.updateBadge(String.valueOf(imageListInfo.getOther()+imageListInfo.getFeatured()), 9);
-//        }
+        if(null == imageListInfo)return;
+        Resources res = getResources();
+        String toolbarTitle = res.getString(R.string.app_name);
+        String toolbarSubTitle = "";
+        switch (mNowCategory){
+            case Constants.NEW:
+                toolbarTitle = res.getString(R.string.category_new_10);
+                String updateTime = Utils.getFormatDateStr(imageListInfo.getNewPhotoUpdateTime());
+                toolbarSubTitle = TextUtils.isEmpty(updateTime)?res.getString(R.string.update_time_default):res.getString(R.string.update_time_auto,updateTime);
+                break;
+            case Constants.ALL:
+                toolbarTitle = res.getString(R.string.category_all);
+                toolbarSubTitle = res.getString(R.string.categories_count,imageListInfo.getAll());
+                break;
+            case Constants.LOVED:
+                toolbarTitle = res.getString(R.string.category_loved);
+                toolbarSubTitle = res.getString(R.string.categories_count,imageListInfo.getAll());
+                break;
+            case Constants.BUILDINGS:
+                toolbarTitle = res.getString(R.string.category_buildings);
+                toolbarSubTitle = res.getString(R.string.categories_count,imageListInfo.getBuilding());
+                break;
+            case Constants.FOOD:
+                toolbarTitle = res.getString(R.string.category_food);
+                toolbarSubTitle = res.getString(R.string.categories_count,imageListInfo.getFood());
+                break;
+            case Constants.NATURE:
+                toolbarTitle = res.getString(R.string.category_nature);
+                toolbarSubTitle = res.getString(R.string.categories_count,imageListInfo.getNature());
+                break;
+            case Constants.PEOPLE:
+                toolbarTitle = res.getString(R.string.category_people);
+                toolbarSubTitle = res.getString(R.string.categories_count,imageListInfo.getPeople());
+                break;
+            case Constants.TECHNOLOGY:
+                toolbarTitle = res.getString(R.string.category_technology);
+                toolbarSubTitle = res.getString(R.string.categories_count,imageListInfo.getTechnology());
+                break;
+            case Constants.OBJECTS:
+                toolbarTitle = res.getString(R.string.category_objects);
+                toolbarSubTitle = res.getString(R.string.categories_count,imageListInfo.getObject());
+                break;
+            case Constants.OTHER:
+                toolbarTitle = res.getString(R.string.category_other);
+                toolbarSubTitle = res.getString(R.string.categories_count,imageListInfo.getOther());
+                break;
+            default:
+                break;
+        }
+        toolbar.setTitle(toolbarTitle);
+        toolbar.setTitleTextAppearance(this, R.style.toolbar_title_style);
+        toolbar.setSubtitle(toolbarSubTitle);
+        toolbar.setSubtitleTextAppearance(this, R.style.toolbar_subtitle_style);
     }
 }

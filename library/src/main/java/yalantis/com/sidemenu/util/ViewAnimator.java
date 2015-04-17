@@ -44,8 +44,11 @@ public class ViewAnimator<T extends Resourceble> {
         this.drawerLayout = drawerLayout;
         this.animatorListener = animatorListener;
     }
-
     public void showMenuContent() {
+        showMenuContent(-1);
+    }
+
+    public void showMenuContent(int selectCategoryId) {
         setViewsClickable(false);
         viewList.clear();
         double size = list.size();
@@ -61,15 +64,16 @@ public class ViewAnimator<T extends Resourceble> {
                 }
             });
             if(list.get(i) instanceof SlideMenuItem){
-                SlideMenuItem item = (SlideMenuItem)list.get(i);
-                if(null != item.getIicon()){
+                SlideMenuItem menuItem = (SlideMenuItem)list.get(i);
+                if(null != menuItem.getIicon()){
                     ((ImageView) viewMenu.findViewById(R.id.menu_item_image)).setImageDrawable(
-                            new IconicsDrawable(actionBarActivity,item.getIicon())
+                            new IconicsDrawable(actionBarActivity,menuItem.getIicon())
                                     .color(0x8af2f2f2)
                     );
                 }else {
                     ((ImageView) viewMenu.findViewById(R.id.menu_item_image)).setImageResource(list.get(i).getImageRes());
                 }
+                viewMenu.setSelected(menuItem.getCategoryId() == selectCategoryId && selectCategoryId > 0);
             }else {
                 ((ImageView) viewMenu.findViewById(R.id.menu_item_image)).setImageResource(list.get(i).getImageRes());
             }

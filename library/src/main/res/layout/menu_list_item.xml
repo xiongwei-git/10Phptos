@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/menu_item_container"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:clickable="true"
-                android:background="@drawable/menu_item_selector">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/menu_item_container"
+              android:layout_width="@dimen/menu_item_width"
+              android:layout_height="@dimen/menu_item_height"
+              android:orientation="vertical"
+              android:background="@android:color/transparent"
+              android:clickable="true">
 
-    <ImageView
-        android:id="@+id/menu_item_image"
-        android:layout_width="@dimen/menu_item_width"
-        android:layout_height="@dimen/menu_item_height"
-        android:layout_centerInParent="true"/>
+    <RelativeLayout
+            android:layout_width="@dimen/menu_item_width"
+            android:layout_height="@dimen/menu_item_height"
+            android:background="@drawable/menu_item_bg_selector">
+
+        <ImageView
+                android:id="@+id/menu_item_image"
+                android:layout_width="@dimen/menu_item_img_width"
+                android:layout_height="@dimen/menu_item_img_height"
+                android:layout_centerInParent="true"/>
 
 
-</RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

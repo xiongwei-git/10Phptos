@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">十张图</string>
+    <string name="app_name">最美图</string>
     <string name="action_open_source">关于我</string>
     <string name="action_shuffle">随机</string>
 
@@ -21,6 +21,7 @@
     <!-- categories about-->
     <string name="update_time_default">暂未更新</string>
     <string name="update_time_auto">%1$s更新</string>
+    <string name="categories_count">共有%1$s张</string>
 
 
     <!-- Images fragments -->

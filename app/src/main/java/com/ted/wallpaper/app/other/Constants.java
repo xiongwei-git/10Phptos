@@ -14,5 +14,15 @@ public class Constants {
     public static final int SERVER_TYPE_QINIU = 1002;
 
 
-
+    public static final int CLOSE = -1;
+    public static final int NEW = 1000;
+    public static final int ALL = 1001;
+    public static final int LOVED = 1002;
+    public static final int BUILDINGS = 1;
+    public static final int FOOD = 2;
+    public static final int NATURE = 4;
+    public static final int PEOPLE = 8;
+    public static final int TECHNOLOGY = 16;
+    public static final int OBJECTS = 32;
+    public static final int OTHER = 64;
 }
