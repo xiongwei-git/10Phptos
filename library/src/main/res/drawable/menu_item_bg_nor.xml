@@ -2,5 +2,5 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 <item android:drawable="@color/primary_color"></item>
 <item android:drawable="@color/black_a10"
-      android:top="79dp"></item>
+      android:top="@dimen/menu_item_bottom_line_margin"></item>
 </layer-list>
