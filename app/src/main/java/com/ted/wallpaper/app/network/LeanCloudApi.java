@@ -35,7 +35,6 @@ public class LeanCloudApi {
     public LeanCloudApi() {
         Cache cache;
         OkHttpClient okHttpClient = null;
-
         try {
             File cacheDir = new File(CustomApplication.getContext().getCacheDir().getPath(), "pic_cache.json");
             cache = new Cache(cacheDir, 10 * 1024 * 1024);

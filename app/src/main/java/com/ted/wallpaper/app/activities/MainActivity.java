@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+
 import com.avos.avoscloud.AVAnalytics;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -25,7 +26,9 @@ import com.ted.wallpaper.app.utils.Utils;
 
 
 public class MainActivity extends ActionBarActivity {
-    /**当前的分类选择*/
+    /**
+     * 当前的分类选择
+     */
     private int mNowCategory = -1;
 
     public enum Category {
@@ -81,7 +84,7 @@ public class MainActivity extends ActionBarActivity {
                         new PrimaryDrawerItem().withName(R.string.category_people).withIdentifier(Category.PEOPLE.id).withIcon(GoogleMaterial.Icon.gmd_person),
                         new PrimaryDrawerItem().withName(R.string.category_technology).withIdentifier(Category.TECHNOLOGY.id).withIcon(GoogleMaterial.Icon.gmd_local_see),
                         new PrimaryDrawerItem().withName(R.string.category_other).withIdentifier(Category.OTHER.id).withIcon(GoogleMaterial.Icon.gmd_loyalty)
-        )
+                )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem drawerItem) {
@@ -101,22 +104,6 @@ public class MainActivity extends ActionBarActivity {
         result.getListView().setVerticalScrollBarEnabled(false);
     }
 
-//    /**
-//     * @param images
-//     */
-//    public void setCategoryCount(ImageResults images) {
-//        if (result.getDrawerItems() != null && result.getDrawerItems().size() == 9 && images != null && images.getResults() != null) {
-//            result.updateBadge(images.getResults().size() + "", 0);
-//            result.updateBadge(LeanCloudApi.countFeatured(images.getResults()) + "", 1);
-//
-//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.BUILDINGS.id) + "", 3);
-//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.FOOD.id) + "", 4);
-//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.NATURE.id) + "", 5);
-//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.OBJECTS.id) + "", 6);
-//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.PEOPLE.id) + "", 7);
-//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.TECHNOLOGY.id) + "", 8);
-//        }
-//    }
 
     @Override
     protected void onPause() {
@@ -129,15 +116,17 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
         AVAnalytics.onResume(this);
     }
-    /***
+
+    /**
      * 更新分类信息
+     *
      * @param imageListInfo
      */
     public void updateImageCategoryInfo(ImageListInfo imageListInfo) {
         if (result.getDrawerItems() != null && result.getDrawerItems().size() == 10 && imageListInfo != null) {
             Resources res = getResources();
             String updateTime = Utils.getFormatDateStr(imageListInfo.getNewPhotoUpdateTime());
-            updateTime = TextUtils.isEmpty(updateTime)?res.getString(R.string.update_time_default):res.getString(R.string.update_time_auto,updateTime);
+            updateTime = TextUtils.isEmpty(updateTime) ? res.getString(R.string.update_time_default) : res.getString(R.string.update_time_auto, updateTime);
             result.updateBadge(updateTime, 0);
             result.updateBadge(String.valueOf(imageListInfo.getAll()), 1);
 
@@ -147,10 +136,9 @@ public class MainActivity extends ActionBarActivity {
             result.updateBadge(String.valueOf(imageListInfo.getObject()), 6);
             result.updateBadge(String.valueOf(imageListInfo.getPeople()), 7);
             result.updateBadge(String.valueOf(imageListInfo.getTechnology()), 8);
-            result.updateBadge(String.valueOf(imageListInfo.getOther()+imageListInfo.getFeatured()), 9);
+            result.updateBadge(String.valueOf(imageListInfo.getOther() + imageListInfo.getFeatured()), 9);
         }
     }
-
 
 
     @Override
@@ -180,7 +168,7 @@ public class MainActivity extends ActionBarActivity {
         return false;
     }
 
-    public void switchActionBarMenu(int category){
+    public void switchActionBarMenu(int category) {
         mNowCategory = category;
         invalidateOptionsMenu();
     }
@@ -188,4 +176,22 @@ public class MainActivity extends ActionBarActivity {
     public interface OnFilterChangedListener {
         void onFilterChanged(int filter);
     }
+
+
+    //    /**
+//     * @param images
+//     */
+//    public void setCategoryCount(ImageResults images) {
+//        if (result.getDrawerItems() != null && result.getDrawerItems().size() == 9 && images != null && images.getResults() != null) {
+//            result.updateBadge(images.getResults().size() + "", 0);
+//            result.updateBadge(LeanCloudApi.countFeatured(images.getResults()) + "", 1);
+//
+//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.BUILDINGS.id) + "", 3);
+//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.FOOD.id) + "", 4);
+//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.NATURE.id) + "", 5);
+//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.OBJECTS.id) + "", 6);
+//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.PEOPLE.id) + "", 7);
+//            result.updateBadge(LeanCloudApi.countCategory(images.getResults(), Category.TECHNOLOGY.id) + "", 8);
+//        }
+//    }
 }

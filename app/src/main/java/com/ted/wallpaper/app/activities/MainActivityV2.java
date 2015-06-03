@@ -1,6 +1,5 @@
 package com.ted.wallpaper.app.activities;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -16,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
+
 import com.avos.avoscloud.AVAnalytics;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -25,15 +25,16 @@ import com.ted.wallpaper.app.fragments.ImagesFragmentV2;
 import com.ted.wallpaper.app.models.leancloud.ImageListInfo;
 import com.ted.wallpaper.app.other.Constants;
 import com.ted.wallpaper.app.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 import yalantis.com.sidemenu.interfaces.Resourceble;
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import yalantis.com.sidemenu.model.SlideMenuItem;
 import yalantis.com.sidemenu.util.ViewAnimator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivityV2 extends ActionBarActivity implements ViewAnimator.ViewAnimatorListener{

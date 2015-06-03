@@ -50,6 +50,7 @@ public class ImagesFragment extends Fragment {
     private ProgressBar mImagesProgress;
     private ErrorView mImagesErrorView;
     private ImageListInfo mImageListInfo;
+
     /**点击某个分类项目时，如果没有数据，在加载完数据时，要执行分类动作*/
     private int mNeedToCategoryFilter = -1;
 

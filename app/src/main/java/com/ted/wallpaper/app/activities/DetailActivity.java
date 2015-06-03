@@ -44,7 +44,7 @@ import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.ted.wallpaper.app.R;
 import com.ted.wallpaper.app.fragments.DirectoryChooserFragment;
-import com.ted.wallpaper.app.fragments.ImagesFragmentV2;
+import com.ted.wallpaper.app.fragments.ImagesFragment;
 import com.ted.wallpaper.app.models.Image;
 import com.ted.wallpaper.app.other.CustomAnimatorListener;
 import com.ted.wallpaper.app.other.CustomTransitionListener;
@@ -155,7 +155,7 @@ public class DetailActivity extends ActionBarActivity {
 
         //get the imageHeader and set the coverImage
         final ImageView image = (ImageView) findViewById(R.id.activity_detail_image);
-        Bitmap imageCoverBitmap = ImagesFragmentV2.photoCache.get(position);
+        Bitmap imageCoverBitmap = ImagesFragment.photoCache.get(position);
         //safety check to prevent nullPointer in the palette if the detailActivity was in the background for too long
         if (imageCoverBitmap == null || imageCoverBitmap.isRecycled()) {
             this.finish();
