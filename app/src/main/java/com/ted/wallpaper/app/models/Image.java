@@ -1,6 +1,7 @@
 package com.ted.wallpaper.app.models;
 
 import android.support.v7.graphics.Palette;
+
 import com.ted.wallpaper.app.other.Constants;
 import com.ted.wallpaper.app.utils.Utils;
 
@@ -37,12 +38,12 @@ public class Image implements Serializable {
     }
 
     public String getUrl() {
-        return image_src;
+        return "http://" + image_src;
     }
 
     public String getHighResImage(int minWidth, int minHeight) {
-        if(getServerType() == Constants.SERVER_TYPE_QINIU){
-            return getQiNiuHighResImage(minWidth,minHeight);
+        if (getServerType() == Constants.SERVER_TYPE_QINIU) {
+            return getQiNiuHighResImage(minWidth, minHeight);
         }
         String url = image_src + "?fm=png";
         if (minWidth > 0 && minHeight > 0) {
@@ -64,7 +65,7 @@ public class Image implements Serializable {
     }
 
     public String getQiNiuHighResImage(int minWidth, int minHeight) {
-        String url = image_src;//h.1080;
+        String url = "http://" + image_src;//h.1080;
         if (minWidth > 0 && minHeight > 0) {
             float phoneRatio = (1.0f * minWidth) / minHeight;
             if (phoneRatio < getRatio()) {
@@ -81,9 +82,8 @@ public class Image implements Serializable {
     }
 
 
-
     public String getImageSrc(int screenWidth) {
-        if(getServerType() == Constants.SERVER_TYPE_QINIU){
+        if (getServerType() == Constants.SERVER_TYPE_QINIU) {
             return getQiNiuImageSrc(screenWidth);
         }
         return image_src + "?q=75&fm=jpg&w=" + Utils.optimalImageWidth(screenWidth);
@@ -102,7 +102,7 @@ public class Image implements Serializable {
     }
 
     public String getQiNiuImageSrc(int screenWidth) {
-        return image_src + "/q75.w" + Utils.optimalImageWidth(screenWidth);
+        return "http://" + image_src + "/q75.w" + Utils.optimalImageWidth(screenWidth);
     }
 
     public void setImageSrc(String image_src) {
@@ -214,7 +214,7 @@ public class Image implements Serializable {
     }
 
     public int getServerType() {
-        if("qiniu".equalsIgnoreCase(getServer_type())){
+        if ("qiniu".equalsIgnoreCase(getServer_type())) {
             return Constants.SERVER_TYPE_QINIU;
         }
         return Constants.SERVER_TYPE_IMGIX;
