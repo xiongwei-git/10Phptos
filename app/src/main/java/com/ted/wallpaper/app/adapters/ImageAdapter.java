@@ -10,16 +10,15 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.ted.wallpaper.app.other.Constants;
-import com.ted.wallpaper.app.other.OnItemClickListener;
 import com.ted.wallpaper.app.R;
 import com.ted.wallpaper.app.models.Image;
+import com.ted.wallpaper.app.other.OnItemClickListener;
 import com.ted.wallpaper.app.other.PaletteTransformation;
 import com.ted.wallpaper.app.utils.Utils;
 

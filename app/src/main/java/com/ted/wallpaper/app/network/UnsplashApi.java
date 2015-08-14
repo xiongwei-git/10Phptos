@@ -5,14 +5,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
+import com.ted.wallpaper.app.CustomApplication;
+import com.ted.wallpaper.app.models.Image;
+import com.ted.wallpaper.app.models.ImageList;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.ted.wallpaper.app.CustomApplication;
-import com.ted.wallpaper.app.models.Image;
-import com.ted.wallpaper.app.models.ImageList;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;

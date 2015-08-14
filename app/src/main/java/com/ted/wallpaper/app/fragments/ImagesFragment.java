@@ -11,9 +11,14 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
 import com.avos.avoscloud.AVAnalytics;
 import com.ted.wallpaper.app.R;
 import com.ted.wallpaper.app.activities.DetailActivity;
@@ -26,15 +31,16 @@ import com.ted.wallpaper.app.models.leancloud.ImageResults;
 import com.ted.wallpaper.app.network.LeanCloudApi;
 import com.ted.wallpaper.app.other.OnItemClickListener;
 import com.ted.wallpaper.app.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
 import retrofit.RetrofitError;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import tr.xip.errorview.ErrorView;
 import tr.xip.errorview.RetryListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class ImagesFragment extends Fragment {
 

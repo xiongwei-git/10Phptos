@@ -3,6 +3,7 @@ package com.ted.wallpaper.app.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ScrollView;
+
 import com.ted.wallpaper.app.other.ScrollViewListener;
 
 

@@ -10,6 +10,11 @@ import com.ted.wallpaper.app.models.Image;
 import com.ted.wallpaper.app.models.leancloud.ImageListInfoResults;
 import com.ted.wallpaper.app.models.leancloud.ImageResults;
 import com.ted.wallpaper.app.other.Constants;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -17,10 +22,6 @@ import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
 import retrofit.http.Query;
 import rx.Observable;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class LeanCloudApi {
     /**每次加载条目*/
